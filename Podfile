@@ -6,5 +6,9 @@ target 'IssuesApp' do
   use_frameworks!
 
   # Pods for IssuesApp
+  pod 'Alamofire', '~> 4.5'
+  pod 'AlamofireImage'
+  pod 'SwiftyJSON'
+  pod 'OAuthSwift', '~> 1.1.2'
 
 end
