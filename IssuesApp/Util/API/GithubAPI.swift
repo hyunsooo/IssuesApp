@@ -8,6 +8,10 @@
 
 import Foundation
 import OAuthSwift
+import Alamofire
+import SwiftyJSON
+
+typealias IssuesResponseHandler = (DataResponse<[Model.Issue]>) -> Void
 
 struct GitHubAPI: API {
     
@@ -51,5 +55,21 @@ struct GitHubAPI: API {
         })
         
     }
+    
+    func repoIssues(owner: String, repo: String, page: Int, handler: @escaping IssuesResponseHandler) {
+        let paramters: Parameters = ["page" : page, "state": "all"]
+        GitHubRouter.manager.request(GitHubRouter.repoIssues(owner: owner, repo: repo, paramter: paramters)).responseSwiftyJSON { (dataResponse: DataResponse<JSON>) in
+            
+            let result: DataResponse<[Model.Issue]> = dataResponse.map({ (json: JSON) -> [Model.Issue] in
+                return json.arrayValue.map({ (json) -> Model.Issue in
+                    return Model.Issue.init(json: json)
+                })
+            })
+            
+            handler(result)
+        }
+        
+    }
+    
     
 }
